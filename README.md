@@ -1,5 +1,7 @@
 # Lecture-Grounded Tutorial Explainer
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 A reusable ChatGPT Skill for teaching tutorials, worksheets, and problem sheets directly from the learner's lecture materials, with inline source visuals, concept-first explanations, and step-by-step solutions.
 
 ## Why this exists
@@ -10,7 +12,7 @@ This Skill uses a source-first workflow:
 
 ```text
 problem sheet
-    -> identify tested concept
+    -> identify the tested concept
     -> find the relevant lecture/source page
     -> show the source visual inline
     -> explain the concept
@@ -20,26 +22,29 @@ problem sheet
 
 ## Core behavior
 
-- **Lecture-grounded:** treats the user's attached course materials as the authoritative basis.
+- **Lecture-grounded:** treats the learner's attached course materials as the authoritative basis.
 - **Visual-first when useful:** shows the minimum sufficient lecture/source pages inline instead of only citing page numbers.
 - **Beginner-safe:** can assume the learner has not attended or read the lecture.
 - **Source-faithful:** preserves the course's terminology, notation, organization, and conventions.
 - **Problem-oriented:** explicitly connects each displayed slide or page to the current question.
 - **Reusable:** ends each problem with a method, decision rule, common trap, or exam shortcut.
-- **Continuation-aware:** when the user says “continue”, it preserves progress instead of restarting the lecture.
+- **Continuation-aware:** when the learner says "continue", it preserves progress instead of restarting the lecture.
 
 ## Example prompts
 
 ```text
-Continue Lecture 04-05 Problem Sheet. Assume I have not watched the lecture. Show the relevant lecture pages inline before explaining each new concept.
+Continue Lecture 04-05 Problem Sheet. Assume I have not watched the lecture.
+Show the relevant lecture pages inline before explaining each new concept.
 ```
 
 ```text
-讲这个 tutorial，默认我一点 lecture 都没听过。先把对应课件图直接贴出来，再解释概念和做题。
+讲这个 tutorial，默认我一点 lecture 都没听过。
+先把对应课件图直接贴出来，再解释概念和做题。
 ```
 
 ```text
-Use the lecture's notation and definitions. Do not replace them with a generic textbook method unless I ask you to compare approaches.
+Use the lecture's notation and definitions.
+Do not replace them with a generic textbook method unless I ask you to compare approaches.
 ```
 
 ## How it teaches
@@ -54,20 +59,30 @@ For a new concept, the default sequence is:
 6. Final answer
 7. Reusable takeaway
 
-The Skill also adapts to different problem types, including concept/classification questions, calculations, convolution/system response, Fourier/transform problems, proofs/derivations, and sketches/graphs.
+The Skill adapts to different problem types, including:
+
+- concept/classification questions;
+- calculations;
+- convolution and system response;
+- Fourier and transform problems;
+- proofs and derivations;
+- sketches and graphs.
 
 ## Repository structure
 
 ```text
 .
 ├── README.md
+├── README.zh-CN.md
 ├── SKILL.md
 ├── agents/
 │   └── openai.yaml
 └── .gitignore
 ```
 
-`SKILL.md` is the behavior specification. `agents/openai.yaml` contains ChatGPT-facing metadata.
+- `SKILL.md` is the behavior specification and the source of truth for the Skill.
+- `agents/openai.yaml` contains ChatGPT-facing metadata.
+- The repository intentionally does **not** bundle course materials.
 
 ## Installation
 
@@ -91,7 +106,7 @@ The generated `skill.zip` is a build artifact and is intentionally ignored by Gi
 
 ### Minimum sufficient visuals
 
-The Skill should show enough source material to teach the concept, but should not dump a long sequence of slides. One to three relevant pages per new concept is usually enough.
+Show enough source material to teach the concept, but do not dump a long sequence of slides. One to three relevant pages per new concept is usually enough.
 
 ### Inline means actually visible
 
@@ -99,16 +114,32 @@ If the runtime supports inline page rendering, the page should appear visibly in
 
 ### Source before outside knowledge
 
-If the supplied materials do not support a claim, the Skill should say so. External knowledge should be added only when the user asks for expansion, verification, comparison, or gap-filling, and it should be clearly labeled.
+If the supplied materials do not support a claim, say so. Add external knowledge only when the learner asks for expansion, verification, comparison, or gap-filling, and label it clearly as outside context.
+
+### Teach the method, not only the answer
+
+The goal is not merely to complete a worksheet. The learner should leave each problem with a reusable solving pattern that can be applied independently.
 
 ## Scope and limitations
 
 - The Skill does not bundle any course content; the learner supplies lectures, tutorials, problem sheets, or textbooks.
 - Inline page display depends on the current ChatGPT/runtime capabilities.
-- It is intended to teach from sources, not to silently override the instructor with a different notation or method.
+- It is intended to teach from supplied sources, not to silently override the instructor with a different notation or method.
+- Runtime-specific tool names are implementation details; the core requirement is to retrieve the relevant source evidence, display it clearly when possible, and teach from it.
 
 ## Development
 
-Edit `SKILL.md` as the source of truth for behavior. Keep runtime-specific implementation details subordinate to the higher-level goal: retrieve the relevant source evidence, display it clearly when possible, and teach from it.
+Edit `SKILL.md` as the source of truth for behavior.
+
+A sensible iteration loop is:
+
+```text
+use on a real tutorial/problem sheet
+    -> notice failures or friction
+    -> update SKILL.md
+    -> validate
+    -> repackage
+    -> reinstall/test
+```
 
 Do not commit generated `skill.zip` files. Repackage after changes when you want to install or distribute a new version.
