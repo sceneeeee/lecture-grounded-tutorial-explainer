@@ -1,0 +1,16 @@
+# Packaged Skill artifacts
+skill.zip
+dist/
+
+# Local progress / agent notes
+temp_report.md
+
+# Python
+__pycache__/
+*.py[cod]
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

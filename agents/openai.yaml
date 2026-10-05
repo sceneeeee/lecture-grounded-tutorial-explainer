@@ -1,0 +1,8 @@
+interface:
+  display_name: "Lecture-Grounded Tutorial Explainer"
+  short_description: "Teach tutorials from lecture sources with inline slides"
+policy:
+  products:
+  - chatgpt
+  - atlas
+  allow_implicit_invocation: true
